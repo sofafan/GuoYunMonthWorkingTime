@@ -21,12 +21,13 @@ for(var Key in a[0]){
 var time = computTime(monthDay)
 	, elapsingTime = elapsedTime(time)
 	, remainingTime = timeRemain(time, monthTime)
-	, leftDay = monthDays - monthDay.length - 1
+	, leftDay = monthDays - monthDay.length  //本月特殊因为少上一天的班
 	, leftTime = monthTime - time
 	, extraTime = extraDayTime(leftDay, leftTime)
+	, remainingTimeAll = leftTime - leftDay * 8 * 60
 ;
 console.log(time, leftTime, monthTime);
-console.log('已经上班：',elapsingTime,'还剩时间：', remainingTime, '剩下每天需要多上多长时间：',extraTime);
+console.log('还剩下',leftDay,'天','已经上班：',elapsingTime,'还剩时间：', remainingTime,'总欠时间：', remainingTimeAll, '剩下每天需要多上多长时间：',extraTime);
 
 
 
@@ -42,11 +43,12 @@ function computTime(arr) {
 			, nightTime = parseInt(day[1][0]) * 60 + parseInt(day[1][1])
 			, time = nightTime - morningTime
 		;
-		if(time > 3 * 60){
+		// console.log(parseInt(day[1][0]) >= 13);
+		if(parseInt(day[1][0]) >= 13){
 			time = time - 60;
 		}
-		else if(nightTime - morningTime > 11 * 60){
-			time -= 90;
+		if(parseInt(day[1][0]) >= 20){
+			time -= 30;
 		}
 		timeAmout += time;
 	}
@@ -81,7 +83,6 @@ function timeRemain(time, allTime) {
 }
 
 function extraDayTime(leftDay, leftTime) {
-	console.log(leftDay, leftTime);
 	var dayTime = leftTime / leftDay / 60 - 8;
-	return dayTime * 60;
+	return (dayTime * 60).toFixed(0);
 }
