@@ -1,14 +1,23 @@
 /**
  * Created by fan on 2017/9/29.
  */
-var fs = require('fs')
-	, file = "1.json"
-	, a = JSON.parse(fs.readFileSync( file))
+var kit = require('./kit.js');
+
+var a = kit.readJsonFile("src/JSON/2.json")
 	, b = new Date()
 	, monthDay = []
-	, monthDays = 18
+	, monthDays = 22
 	, monthTime = monthDays * 8 * 60
 ;
+
+// console.log(a);
+
+// var a = require('./monthDay.js');
+// a.dayTime(5 ,function (a) {
+// 	console.log(a);
+// });
+// var dw = require('./computTime.js');
+// console.log(dw);
 
 for(var Key in a[0]){
 	var day = []
