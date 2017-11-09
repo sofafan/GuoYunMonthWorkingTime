@@ -1,15 +1,17 @@
 /**
  * Created by fan on 2017/11/8.
  */
-var fs = require('fs')
-	, file = "src/JSON/1.json"
-	, dd = JSON.parse(fs.readFileSync( file));
+// var fs = require('fs')
 
-var a = {
-	dayTime: function (a, callback) {
-		var b = a+ 1;
-		callback(b);
-	}
+var http = require('http')
+	, monthInfo = {}    //每月得到信息
+;
+
+function ComputTime(month, extraDay) {
+
+}
+ComputTime.prototype = {
+
 };
 
-module.exports = dd ;
+module.exports = monthInfo
