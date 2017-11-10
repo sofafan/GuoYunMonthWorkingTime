@@ -10,43 +10,12 @@ var a = kit.readJsonFile("src/JSON/2.json")
 	, monthTime = monthDays * 8 * 60
 ;
 
-// console.log(a);
-var http = require('http');
-
-
-(function () {
-	// var arr = []
-	// 	, strb = ''
-	// 	, url = 'http://www.easybots.cn/api/holiday.php?m='
-	// ;
-	// for(var i = 1; i <= 12; i++){
-	// 	var stra = '';
-	// 	if(i < 10){
-	// 		stra = '20170' + i + ',';
-	// 	}
-	// 	else if(i >= 10 && i < 12){
-	// 		stra = '2017' + i + ',';
-	// 	}
-	// 	else{
-	// 		stra = '201712'
-	// 	}
-	// 	strb += stra;
-	// }
-	// strb = url + strb;
-	// console.log(strb);
-	// http.get('http://www.easybots.cn/api/holiday.php?d=20171001', function (res){
-	// 	res.on('data', function(chunk){
-	// 		console.log(JSON.parse(chunk));
-	// 	});
-	// }).on('error', function (e){
-	// 	console.log('Got error:', e.message);
-	// });
-})()
-
-// var a = require('./monthDay.js');
+var A = require('./monthDay.js');
 // a.dayTime(5 ,function (a) {
 // 	console.log(a);
 // });
+var aaaaaa = new A('day', '2017-01-22');
+console.log(aaaaaa.getDayInfo('2017-05-21'));
 // var dw = require('./computTime.js');
 // console.log(dw);
 
