@@ -23,7 +23,6 @@ function MonthDay(type, value) {
 MonthDay.prototype = {
 	init:function (type, value) {
 		var daysRange = []
-			, valueArr = value.split('-')
 			, workingDays = 25
 		;
 		this.type = type;
@@ -43,7 +42,7 @@ MonthDay.prototype = {
 				daysRange.push(value);
 				break;
 			case 'workingDays':
-				daysRange = this.getWorkingDays();
+				daysRange = this.getWorkingDays(value);
 				break;
 			case 'days':
 				daysRange = value;
@@ -69,7 +68,7 @@ MonthDay.prototype = {
 		
 		year = parseInt(valueArr[0]);
 		month = parseInt(valueArr[1]);
-		monthDay[1] += monthDay[1] + _isLeap(year);
+		monthDay[1] = monthDay[1] + _isLeap(year); //更新二月的天数
 		
 		return monthDay[month - 1];
 	}
@@ -99,16 +98,60 @@ MonthDay.prototype = {
 	}
 	
 	/**
-	 * 获取范围内的所有日期
+	 * 获取范围内的所有数组。
 	 * @param daysRange 日期的范围
 	 */
 	, getDaysArr : function (daysRange) {
-	
+		var startDaysArr = daysRange[0].split('-') , endDaysArr = daysRange[1].split('-') //起始和结束日期信息
+			, yearArr = [] , monthArr = []
+			, startMonth = startDaysArr[1], endMonth = endDaysArr[1]
+			, daysArr = []
+			, self = this
+		;
+		
+		//获取年份数组
+		for(var i = parseInt(startDaysArr); i <= parseInt(endDaysArr); i ++){
+			yearArr.push(i);
+		}
+		
+		//处理所有月份数组
+		if(yearArr.length === 1){
+			for(var m = parseInt(startMonth); m <= parseInt(endMonth); m++){
+				monthArr.push(startDaysArr[0] + '-' +_numToString(m));
+			}
+		}
+		else {
+			for(var h = parseInt(startMonth); h <= 12; h++){
+				monthArr.push(startDaysArr[0] + '-' +_numToString(h));
+			}
+			
+			for(var j = 0; j < yearArr.length - 2; j++){
+				for(var k = 1; k <= 12; k++){
+					monthArr.push(yearArr[j + 1].toString() + '-' +_numToString(k));
+				}
+			}
+			
+			for(var o = 1; o <= parseInt(endMonth); o++){
+				monthArr.push(endDaysArr[0] + '-' +_numToString(o));
+			}
+		}
+		
+		//遍历月份获取所有的日期
+		monthArr.forEach(function (item) {
+			var monthDays = self.getMonthDays(item)
+			;
+			
+			for(var p = 1; p <= monthDays; p++){
+				daysArr.push(item + '-' +_numToString(p))
+			}
+		});
+		
+		return daysArr;
 	}
 	
 	/**
 	 * 获取日期的信息是周几
-	 * @param day 日期信息 格式为 “****-**-**”
+	 * @param value 日期信息 格式为 “****-**-**”
 	 */
 	, getDayInfo : function (value) {
 		if(!value && typeof value !== "string" && !/^\d{4}\-\d{2}\-\d{2}$/.test(value)){
@@ -124,8 +167,6 @@ MonthDay.prototype = {
 			, date = new Date(value)
 		;
 		daysInfo[value] = 0;
-		console.log(holidays);
-		console.log(holidays.officialHoliday[month])
 		//判断是否为假期
 		if(holidays.officialHoliday.hasOwnProperty(month)){
 			if(holidays.officialHoliday[month].indexOf(day) !== -1){
@@ -147,6 +188,80 @@ MonthDay.prototype = {
 		
 		return daysInfo;
 	}
+	
+	/**
+	 * 获取范围内的所有日期工作日，休息日，节假日的日期。
+	 */
+	, getDaysInfo : function () {
+		var self = this
+			, daysRange = self.daysRange
+			, daysArr = self.getDaysArr(daysRange)
+			, workingDays = []
+			, daysOff = []
+			, holidays = []
+			, daysInfo = {}
+		;
+		
+		daysArr.forEach(function (item) {
+			var value = self.getDayInfo(item)[item];
+			
+			if(value === 0){
+				workingDays.push(item);
+			}
+			else if(value === 1){
+				daysOff.push(item);
+			}
+			else{
+				holidays.push(item);
+			}
+		})
+		
+		daysInfo.workingDays = workingDays;
+		daysInfo.daysOff = daysOff;
+		daysInfo.holidays = holidays;
+		
+		// return JSON.stringify(daysInfo);
+		return daysInfo;
+		// console.log(JSON.stringify(daysArr));
+		
+	}
+	
+	/**
+	 * 获取范围内的所有日期工作日，休息日，节假日的数量。
+	 */
+	, getDaysCount : function () {
+		var self = this
+			, daysRange = self.daysRange
+			, daysArr = self.getDaysArr(daysRange)
+			, workingDaysCount = 0
+			, daysOffCount = 0
+			, holidaysCount = 0
+			, daysInfo = {}
+		;
+		
+		daysArr.forEach(function (item) {
+			var value = self.getDayInfo(item)[item];
+			
+			if(value === 0){
+				workingDaysCount++;
+			}
+			else if(value === 1){
+				daysOffCount++;
+			}
+			else{
+				holidaysCount++;
+			}
+		})
+		
+		daysInfo.workingDaysCount = workingDaysCount;
+		daysInfo.daysOffCount = daysOffCount;
+		daysInfo.holidaysCount = holidaysCount;
+		
+		// return JSON.stringify(daysInfo);
+		return daysInfo;
+		// console.log(JSON.stringify(daysArr));
+		
+	}
 };
 
 
@@ -158,6 +273,27 @@ MonthDay.prototype = {
 function _isLeap (year) {
 	var res = year % 100 === 0 ? (year % 400 === 0 ? 1 : 0) : ( year % 4 === 0 ?1 : 0);
 	return res;
+}
+
+/**
+ * 把时间戳数值而是转换为符合字符，小于10的数字或在前面添加0
+ * @param num   传过来的数值
+ * @return {*}
+ */
+function _numToString(num) {
+	var string;
+	if(typeof num !== 'number'){
+		return;
+	}
+	
+	if(num < 10){
+		string = '0' + num;
+	}
+	else{
+		string = num.toString();
+	}
+	
+	return string
 }
 
 module.exports = MonthDay ;
