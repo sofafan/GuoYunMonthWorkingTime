@@ -14,13 +14,13 @@ var http = require('http')
  * @param value 根据不同的type穿过的日期类型：year，month，day,workingDays 为单个字符值，days 为数组类型
  * @constructor
  */
-function MonthDay(type, value) {
+function daysInfo(type, value) {
 	this.type = type;
 	this.value = value;
 	this.init(type, value);
 }
 
-MonthDay.prototype = {
+daysInfo.prototype = {
 	init:function (type, value) {
 		var daysRange = []
 			, workingDays = 25
@@ -98,7 +98,7 @@ MonthDay.prototype = {
 	}
 	
 	/**
-	 * 获取范围内的所有数组。
+	 * 获取范围内的所有日期。
 	 * @param daysRange 日期的范围
 	 */
 	, getDaysArr : function (daysRange) {
@@ -296,4 +296,4 @@ function _numToString(num) {
 	return string
 }
 
-module.exports = MonthDay ;
+module.exports = daysInfo ;
