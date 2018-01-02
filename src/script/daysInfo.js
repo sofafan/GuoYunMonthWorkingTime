@@ -84,11 +84,11 @@ daysInfo.prototype = {
 			, endDay
 		;
 		
-		startDay = value + '-' + this.workingDays;
+		startDay = value + '-' + (this.workingDays + 1);
 		endDay = value + '-' + this.workingDays;
 		
 		if(parseInt(valueArr[1]) === 1){
-			endDay = (parseInt(valueArr[0]) - 1).toString() + '-12-' + this.workingDays;
+			startDay = (parseInt(valueArr[0]) - 1).toString() + '-12-' + (this.workingDays + 1);
 		}
 		
 		dayArr.push(startDay);
@@ -110,7 +110,7 @@ daysInfo.prototype = {
 		;
 		
 		//获取年份数组
-		for(var i = parseInt(startDaysArr); i <= parseInt(endDaysArr); i ++){
+		for(var i = parseInt(startDaysArr[0]); i <= parseInt(endDaysArr[0]); i ++){
 			yearArr.push(i);
 		}
 		
@@ -137,11 +137,22 @@ daysInfo.prototype = {
 		}
 		
 		//遍历月份获取所有的日期
-		monthArr.forEach(function (item) {
-			var monthDays = self.getMonthDays(item)
+		monthArr.forEach(function (item, index) {
+			var monthDays = self.getMonthDays(item) //当前月份的天数
+				, startDay = 1
+				, endDay = monthDays
 			;
 			
-			for(var p = 1; p <= monthDays; p++){
+			if(index === 0 && parseInt(self.daysRange[0].substring(8)) !== 1){
+				startDay =  parseInt(self.daysRange[0].substring(8));
+			}
+			
+			if(index === monthArr.length - 1 && parseInt(self.daysRange[1].substring(8)) !== monthDays){
+				endDay = parseInt(self.daysRange[1].substring(8));
+			}
+			
+			
+			for(var p = startDay; p <= endDay; p++){
 				daysArr.push(item + '-' +_numToString(p))
 			}
 		});

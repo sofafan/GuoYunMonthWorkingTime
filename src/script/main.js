@@ -6,15 +6,15 @@ var kit = require('./kit.js')
 	, computTime = require('./computTime.js')
 ;
 
-var a = kit.readJsonFile("src/JSON/2.json")
-	, workingDays = new daysInfo('workingDays', '2017-11')
+var a = kit.readJsonFile("src/JSON/2018-01.json")
+	, workingDays = new daysInfo('workingDays', '2018-01')
 	, workingDaysInfo = workingDays.getDaysCount()
 	, computTime = new computTime(a)
 	, monthDay = []
 	, monthDays = workingDaysInfo.workingDaysCount
 	, monthTime = monthDays * 8 * 60
 ;
-
+console.log(workingDaysInfo);
 for(var Key in a[0]){
 	var day = []
 		,morning = a[0][Key].morning
