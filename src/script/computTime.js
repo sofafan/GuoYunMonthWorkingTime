@@ -45,6 +45,14 @@ ComputTime.prototype = {
 				, time = nightTime - morningTime
 			;
 			
+			if(parseInt(day[0][1]) === 12){
+				time += parseInt(day[1][1])
+			}
+			
+			if(parseInt(day[0][0]) >= 13){
+				time += 60;
+			}
+			
 			if(parseInt(day[1][0]) >= 13){
 				time = time - 60;
 			}
